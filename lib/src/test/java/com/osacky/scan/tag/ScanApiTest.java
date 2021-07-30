@@ -84,7 +84,7 @@ public class ScanApiTest {
         writeToFileWithName("build.gradle",
                         "import com.osacky.scan.tag.ScanApi\n" +
                         "plugins {\n" +
-                        "  id \"com.osacky.scan-api\"\n"+
+                        "  id \"com.osacky.tagger\"\n"+
                         "}\n" +
                         "new ScanApi(project)." + method + "\n");
     }

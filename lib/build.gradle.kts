@@ -15,7 +15,7 @@ repositories {
 
 gradlePlugin {
     plugins {
-        create("buildscan-api-plugin") {
+        create("tagger") {
             id = "com.osacky.tagger"
             displayName = "Buildscan Tagging API"
             description = "An easy way to tag Buildscans from Gradle Plugins"
