@@ -97,6 +97,7 @@ public class ScanApiTest {
     public GradleRunner gradleRunner() {
         return GradleRunner.create()
                 .withArguments("help")
+                .forwardOutput()
                 .withProjectDir(testProjectRoot.getRoot())
                 .withPluginClasspath();
     }
