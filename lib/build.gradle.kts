@@ -33,6 +33,27 @@ pluginBundle {
     }
 }
 
+tasks.withType(Test::class.java).configureEach {
+    testLogging {
+        events = setOf(
+            org.gradle.api.tasks.testing.logging.TestLogEvent.SKIPPED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED,
+            org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
+        )
+    }
+    javaLauncher.set(javaToolchains.launcherFor {
+        //Use 15 for multi-line strings
+        languageVersion.set(JavaLanguageVersion.of(15))
+    })
+}
+
+tasks.named("compileTestJava", JavaCompile::class.java).configure {
+    javaCompiler.set(javaToolchains.compilerFor {
+        //Use 15 for multi-line strings
+        languageVersion.set(JavaLanguageVersion.of(15))
+    })
+}
+
 dependencies {
     compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.6.3")
     compileOnly(gradleApi())

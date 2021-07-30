@@ -81,6 +81,9 @@ public class ScanApiTest {
     }
 
     private void writeBuildGradle(String method) throws IOException {
+        String foo = """This
+        is a
+        multi-line""".trim();
         writeToFileWithName("build.gradle",
                         "import com.osacky.scan.tag.ScanApi\n" +
                         "plugins {\n" +
