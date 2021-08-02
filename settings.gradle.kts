@@ -3,4 +3,4 @@ plugins {
 }
 
 rootProject.name = "tagger-build"
-include("lib")
+include("tagger-lib")
