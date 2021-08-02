@@ -19,4 +19,17 @@ new ScanApi(project).link("Gradle", "https://gradle.com")
 
 
 You can use it as a plugin or a standard library dependency.
-// TODO add maven coordinates and example for both
+
+To use as a plugin add it to your build.gradle plugins block:
+```
+plugins {
+  id("com.osacky.tagger") version "0.1"
+}
+```
+
+or to use in a plugin add it as a compile dependency:
+```
+dependencies {
+  implementation("com.osacky.tagger:tagger-lib:0.1")
+}
+```

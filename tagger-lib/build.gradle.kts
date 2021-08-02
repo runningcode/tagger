@@ -6,10 +6,9 @@ plugins {
 }
 
 group = "com.osacky.tagger"
-version = "0.1"
+version = "0.2-SNAPSHOT"
 
 repositories {
-    // Use Maven Central for resolving dependencies.
     mavenCentral()
     gradlePluginPortal()
 }
@@ -117,6 +116,5 @@ fun MavenPom.configurePom(pluginName: String) {
         connection.set("scm:git:git://github.com/runningcode/tagger.git")
         developerConnection.set("scm:git:ssh://github.com/runningcode/tagger.git")
         url.set("https://github.com/runningcode/tagger")
-
     }
 }
