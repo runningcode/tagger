@@ -59,8 +59,6 @@ publishing {
         afterEvaluate {
             named<MavenPublication>("pluginMaven") {
                 signing.sign(this)
-//                artifact(tasks["sourcesJar"])
-//                artifact(tasks["javadocJar"])
                 pom.configurePom("tagger")
             }
             named<MavenPublication>("taggerPluginMarkerMaven") {
@@ -94,6 +92,29 @@ java {
 
 signing {
     isRequired = isReleaseBuild
+}
+
+tasks.withType<JavaCompile>().configureEach {
+    javaCompiler.set(javaToolchains.compilerFor {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    })
+}
+
+val java8Int = tasks.register<Test>("java8IntegrationTest") {
+    group = "verification"
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(8))
+    })
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
+}
+val java11Int = tasks.register<Test>("java11IntegrationTest") {
+    group = "verification"
+    javaLauncher.set(javaToolchains.launcherFor {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    })
+    testClassesDirs = sourceSets.test.get().output.classesDirs
+    classpath = sourceSets.test.get().runtimeClasspath
 }
 
 fun MavenPom.configurePom(pluginName: String) {
