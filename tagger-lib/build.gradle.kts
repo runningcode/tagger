@@ -18,7 +18,7 @@ gradlePlugin {
         create("tagger") {
             id = "com.osacky.tagger"
             displayName = "Tagger plugin for Gradle Enterprise"
-            implementationClass = "com.osacky.scan.tag.ScanApiPlugin"
+            implementationClass = "com.osacky.tagger.ScanApiPlugin"
         }
     }
 }

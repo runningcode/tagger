@@ -1,4 +1,4 @@
-package com.osacky.scan.tag;
+package com.osacky.tagger;
 
 import org.gradle.api.Plugin;
 
