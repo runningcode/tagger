@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.osacky.tagger"
-version = "0.2-SNAPSHOT"
+version = "0.2"
 
 repositories {
     mavenCentral()
