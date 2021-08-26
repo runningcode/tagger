@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -60,6 +61,34 @@ public class ScanApiTest {
                 .build();
 
         assertThat(result.getOutput()).contains("SUCCESS");
+    }
+
+    @Test
+    public void scanApiSupportsCoCa() throws IOException {
+        writeBuildGradle("tag('foo')");
+        writeSettingsGradleWithEnterprisePlugin();
+        File buildGradle = new File(testProjectRoot.getRoot(), "build.gradle");
+        FileWriter fileWriter = new FileWriter(buildGradle, true);
+        fileWriter.write("tasks.named('help').configure { \n" +
+                "def scanApi = new ScanApi(project)\n" +
+                "doFirst { \n" +
+                "scanApi.tag('help-tag'); \n" +
+                "println('hello from help') \n" +
+                "} " +
+                "}");
+        fileWriter.close();
+
+        BuildResult result = gradleRunner()
+                .withArguments("help", "--configuration-cache")
+                .build();
+        assertThat(result.getOutput()).contains("hello from help");
+        assertThat(result.getOutput()).contains("Configuration cache entry stored.");
+
+        BuildResult result2 = gradleRunner()
+                .withArguments("help", "--configuration-cache")
+                .build();
+        assertThat(result2.getOutput()).contains("hello from help");
+        assertThat(result2.getOutput()).contains("Configuration cache entry reused.");
     }
 
     private void writeSettingsGradleWithEnterprisePlugin() throws IOException {
