@@ -70,14 +70,11 @@ publishing {
 }
 
 dependencies {
-    compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.6.3")
-    compileOnly(gradleApi())
+    compileOnly("com.gradle:gradle-enterprise-gradle-plugin:3.6.4")
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation(gradleTestKit())
     testImplementation("org.apache.commons:commons-io:1.3.2")
     testImplementation("com.google.truth:truth:1.0.1")
-    testImplementation("org.codehaus.groovy:groovy-all:2.4.15")
 }
 
 tasks.withType<ValidatePlugins>().configureEach {
@@ -105,16 +102,16 @@ val java8Int = tasks.register<Test>("java8IntegrationTest") {
     javaLauncher.set(javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of(8))
     })
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath
 }
 val java11Int = tasks.register<Test>("java11IntegrationTest") {
     group = "verification"
     javaLauncher.set(javaToolchains.launcherFor {
         languageVersion.set(JavaLanguageVersion.of(11))
     })
-    testClassesDirs = sourceSets.test.get().output.classesDirs
-    classpath = sourceSets.test.get().runtimeClasspath
+}
+
+tasks.named("check").configure {
+    dependsOn(java8Int, java11Int)
 }
 
 fun MavenPom.configurePom(pluginName: String) {

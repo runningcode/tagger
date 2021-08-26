@@ -44,12 +44,12 @@ public class ScanApi {
 
     private void invokeMethodIfAvailable(String name, String... args) {
         if (buildScanExtension != null) {
-            Method method = getBuildscanMethod(name, args.length);
-            invokeBuildscanMethod(method, args);
+            Method method = getBuildScanMethod(name, args.length);
+            invokeBuildScanMethod(method, args);
         }
     }
 
-    private void invokeBuildscanMethod(Method method, String... args) {
+    private void invokeBuildScanMethod(Method method, String... args) {
         try {
             method.invoke(buildScanExtension, (Object[]) args);
         } catch (InvocationTargetException | IllegalAccessException e) {
@@ -57,7 +57,7 @@ public class ScanApi {
         }
     }
 
-    private Method getBuildscanMethod(String methodName, int argLength) {
+    private Method getBuildScanMethod(String methodName, int argLength) {
         try {
             if (argLength == 1) {
                 return buildScanExtension.getClass().getMethod(methodName, String.class);
