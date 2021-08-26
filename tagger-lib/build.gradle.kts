@@ -74,7 +74,7 @@ dependencies {
 
     testImplementation("junit:junit:4.13.2")
     testImplementation("org.apache.commons:commons-io:1.3.2")
-    testImplementation("com.google.truth:truth:1.0.1")
+    testImplementation("com.google.truth:truth:1.1.3")
 }
 
 tasks.withType<ValidatePlugins>().configureEach {
