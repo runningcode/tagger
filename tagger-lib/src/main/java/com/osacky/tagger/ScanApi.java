@@ -4,6 +4,7 @@ import org.gradle.api.Project;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 /**
  * For build and plugin authors to easily tag build scans.
@@ -59,11 +60,9 @@ public class ScanApi {
 
     private Method getBuildScanMethod(String methodName, int argLength) {
         try {
-            if (argLength == 1) {
-                return buildScanExtension.getClass().getMethod(methodName, String.class);
-            } else {
-                return buildScanExtension.getClass().getMethod(methodName, String.class, String.class);
-            }
+            Class<?>[] classes = new Class<?>[argLength];
+            Arrays.fill(classes, String.class);
+            return buildScanExtension.getClass().getMethod(methodName, classes);
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }

@@ -23,7 +23,7 @@ You can use it as a plugin or a standard library dependency.
 To use as a plugin add it to your build.gradle plugins block:
 ```
 plugins {
-  id("com.osacky.tagger") version "0.2"
+  id("com.osacky.tagger") version "0.2" apply false
 }
 ```
 
