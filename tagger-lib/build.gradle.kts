@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.osacky.tagger"
-version = "0.2"
+version = "0.3-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -18,7 +18,7 @@ gradlePlugin {
         create("tagger") {
             id = "com.osacky.tagger"
             displayName = "Tagger plugin for Gradle Enterprise"
-            implementationClass = "com.osacky.tagger.ScanApiPlugin"
+            implementationClass = "com.osacky.tagger.TaggerPlugin"
         }
     }
 }

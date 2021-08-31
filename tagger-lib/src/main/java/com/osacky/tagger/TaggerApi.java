@@ -9,18 +9,27 @@ import java.util.Arrays;
 /**
  * For build and plugin authors to easily tag build scans.
  */
-public class ScanApi {
+public class TaggerApi implements TaggerApiExtension {
 
     private final Object buildScanExtension;
 
-    public ScanApi(Project project) {
+    public TaggerApi(Project project) {
         buildScanExtension = project.getRootProject().getExtensions().findByName("buildScan");
+    }
+
+    public TaggerApi(Object object) {
+        if (object instanceof Project) {
+            buildScanExtension = ((Project)object).getRootProject().getExtensions().findByName("buildScan");
+        } else {
+            buildScanExtension = null;
+        }
     }
 
     /**
      * Calls {@link com.gradle.scan.plugin.BuildScanExtension#tag(String)} if available.
      * @param tag a value to add as a Build scan tag
      */
+    @Override
     public void tag(String tag) {
         invokeMethodIfAvailable("tag", tag);
     }
@@ -30,6 +39,7 @@ public class ScanApi {
      * @param name the key for the custom value
      * @param value the data to add
      */
+    @Override
     public void value(String name, String value) {
         invokeMethodIfAvailable("value", name, value);
     }
@@ -39,6 +49,7 @@ public class ScanApi {
      * @param name the name of the URL link to be displayed in the UI
      * @param url the URL to follow when the link is clicked
      */
+    @Override
     public void link(String name, String url) {
         invokeMethodIfAvailable("link", name, url);
     }
@@ -66,5 +77,9 @@ public class ScanApi {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean isAvailable() {
+        return buildScanExtension != null;
     }
 }
