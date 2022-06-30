@@ -14,7 +14,7 @@ import java.nio.charset.StandardCharsets;
 
 import static com.google.common.truth.Truth.assertThat;
 
-public class ScanApiTest {
+public class TaggerApiTest {
 
     @Rule
     public TemporaryFolder testProjectRoot = new TemporaryFolder();
@@ -64,15 +64,15 @@ public class ScanApiTest {
     }
 
     @Test
-    public void scanApiSupportsCoCa() throws IOException {
+    public void taggerApiObjectSupportsCoCa() throws IOException {
         writeBuildGradle("tag('foo')");
         writeSettingsGradleWithEnterprisePlugin();
         File buildGradle = new File(testProjectRoot.getRoot(), "build.gradle");
         FileWriter fileWriter = new FileWriter(buildGradle, true);
         fileWriter.write("tasks.named('help').configure { \n" +
-                "def scanApi = new ScanApi(project)\n" +
+                "def taggerApi = new TaggerApi(project)\n" +
                 "doFirst { \n" +
-                "scanApi.tag('help-tag'); \n" +
+                "taggerApi.tag('help-tag'); \n" +
                 "println('hello from help') \n" +
                 "} " +
                 "}");
@@ -91,10 +91,58 @@ public class ScanApiTest {
         assertThat(result2.getOutput()).contains("Configuration cache entry reused.");
     }
 
+    @Test
+    public void taggerApiExtensionSupportsCoCa() throws IOException {
+        writeBuildGradle("tag('foo')");
+        writeSettingsGradleWithEnterprisePlugin();
+        File buildGradle = new File(testProjectRoot.getRoot(), "build.gradle");
+        FileWriter fileWriter = new FileWriter(buildGradle, true);
+        fileWriter.write("tasks.named('help').configure { \n" +
+                "taggerApi.tag('build-tag'); \n" +
+                "def scanApi = taggerApi\n" +
+                "  doFirst { \n" +
+                "    scanApi.tag('help-tag'); \n" +
+                "    println('hello from help') \n" +
+                "  } \n" +
+                "}");
+        fileWriter.close();
+
+        BuildResult result = gradleRunner()
+                .withArguments("help", "--configuration-cache")
+                .build();
+        assertThat(result.getOutput()).contains("hello from help");
+        assertThat(result.getOutput()).contains("Configuration cache entry stored.");
+
+        BuildResult result2 = gradleRunner()
+                .withArguments("help", "--configuration-cache")
+                .build();
+        assertThat(result2.getOutput()).contains("hello from help");
+        assertThat(result2.getOutput()).contains("Configuration cache entry reused.");
+    }
+
+    @Test
+    public void canTagBuildScanUsingExtension() throws IOException {
+        writeBuildGradle("tag('foo')");
+        writeSettingsGradleWithEnterprisePlugin();
+        File buildGradle = new File(testProjectRoot.getRoot(), "build.gradle");
+        FileWriter fileWriter = new FileWriter(buildGradle, true);
+        fileWriter.write("taggerApi { \n" +
+                "  tag('extension-tag'); \n" +
+                "  value('name', 'key'); \n" +
+                "  value('link', 'https://www.gradle.com'); \n" +
+                "}");
+        fileWriter.close();
+
+        BuildResult result = gradleRunner()
+                .withArguments("help", "--configuration-cache")
+                .build();
+        assertThat(result.getOutput()).contains("SUCCESS");
+    }
+
     private void writeSettingsGradleWithEnterprisePlugin() throws IOException {
         writeToFileWithName("settings.gradle", "" +
                 "plugins {\n" +
-                "id \"com.gradle.enterprise\" version '3.6.3'\n" +
+                "id \"com.gradle.enterprise\" version '3.6.4'\n" +
                 "}\n" +
                 "gradleEnterprise {\n" +
                 "  buildScan {\n" +
@@ -108,11 +156,11 @@ public class ScanApiTest {
 
     private void writeBuildGradle(String method) throws IOException {
         writeToFileWithName("build.gradle",
-                        "import com.osacky.tagger.ScanApi\n" +
+                        "import com.osacky.tagger.TaggerApi\n" +
                         "plugins {\n" +
                         "  id \"com.osacky.tagger\"\n"+
                         "}\n" +
-                        "new ScanApi(project)." + method + "\n");
+                        "new TaggerApi(project)." + method + "\n");
     }
 
     private void writeToFileWithName(String filename, String contents) throws IOException {
